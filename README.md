@@ -1,132 +1,129 @@
-# Drug-Discovery-using-ChEMBL-API
+# ChEMBL Discovery Platform
 
-Project Overview
-Drug Discovery Tool leveraging ChEMBL bioactivity database
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10%2B-blue" alt="Python">
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
+  <img src="https://img.shields.io/badge/Version-1.0.0-purple" alt="Version">
+</p>
 
-Real-time pharmaceutical research with molecular visualization
+Enterprise-grade pharmaceutical research platform for drug discovery using the ChEMBL bioactivity database. Production-ready with FastAPI, comprehensive testing, and Docker deployment.
 
-Interactive disease-based search capabilities
+## Features
 
-Complete Technical Documentation
-Tech Stack Analysis:
+- **Disease-based drug search** - Find drugs indicated for any disease using EFO terms
+- **Target-based discovery** - Search by protein target and organism
+- **Drug comparison** - Side-by-side comparison of multiple compounds
+- **Approval status** - Check FDA approval status for any compound
+- **RESTful API** - Full FastAPI service with OpenAPI docs
+- **Type-safe** - Complete type hints and validation
+- **Production-ready** - Docker, CI/CD, testing built-in
 
-ChEMBL WebResource Client - Official API access to 2.4M+ compounds
+## Quick Start
 
-RDKit - Industry-standard cheminformatics toolkit for molecular processing
+```python
+# Install
+pip install chembldiscovery
 
-pandas - Advanced data manipulation and structured output
+# Use the library
+from chembldiscovery import DrugService
 
-Interactive Environment - Google Colab and Jupyter Notebook support
+service = DrugService()
+result = service.search_by_disease("dengue")
 
-Core Features:
+for drug in result.drugs:
+    print(f"{drug.drug_name}: Phase {drug.max_phase}")
+```
 
-Disease-based drug discovery with real-time ChEMBL data
+## API Usage
 
-Molecular structure visualization from SMILES notation
+```bash
+# Start the API server
+uvicorn chembldiscovery.api.main:app --reload
 
-Interactive user input with disease names and symptoms
+# Search for drugs
+curl "http://localhost:8000/api/v1/drugs/search?disease=cancer&max_results=10"
 
-Comprehensive drug information retrieval (names, phases, indications)
+# Get drug details
+curl "http://localhost:8000/api/v1/drugs/CHEM126921"
 
-Batch processing capabilities for multiple compounds
+# Check approval
+curl "http://localhost:8000/api/v1/drugs/CHEM126921/approved"
+```
 
-Practical Implementation Details
-Installation & Setup:
+## Docker Deployment
 
-Google Colab and local installation instructions
+```bash
+# Build and run
+docker build -t chembldiscovery .
+docker run -p 8000:8000 chembldiscovery
 
-Dependency management and environment setup
+# Or use docker-compose
+docker-compose up -d
+```
 
-Step-by-step configuration guide
+## Architecture
 
-Code Examples:
+```
+chembldiscovery/
+├── src/chembldiscovery/
+│   ├── api/          # FastAPI routes
+│   ├── core/         # ChEMBL client
+│   ├── models/      # Data models
+│   └── services/    # Business logic
+├── tests/            # Test suite
+├── config/           # Configuration
+└── .github/         # CI/CD workflows
+```
 
-Complete search functions with error handling
+## API Endpoints
 
-Molecular visualization examples
+| Endpoint | Description |
+|----------|-------------|
+| `GET /health` | Health check |
+| `GET /api/v1/drugs/search` | Search by disease |
+| `GET /api/v1/drugs/{chembl_id}` | Drug details |
+| `GET /api/v1/drugs/{chembl_id}/approved` | Check approval |
+| `GET /api/v1/targets/search` | Search targets |
+| `POST /api/v1/drugs/compare` | Compare drugs |
 
-Interactive user interface implementations
+## Development
 
-Advanced compound analysis methods
+```bash
+# Clone and install
+git clone https://github.com/chembldiscovery/chembldiscovery.git
+cd chembldiscovery
+pip install -e ".[dev]"
 
-Database Information:
+# Run tests
+pytest -v
 
-ChEMBL database coverage (2.4M+ compounds, 15M+ bioactivity points)
+# Lint
+ruff check src/
+mypy src/
+```
 
-EFO (Experimental Factor Ontology) integration
+## Tech Stack
 
-Data quality and standardization details
+- **ChEMBL WebResource Client** - Database access
+- **RDKit** - Molecular processing
+- **FastAPI** - REST API
+- **Pydantic** - Validation
+- **Pytest** - Testing
+- **Docker** - Deployment
 
-Advanced Features & Use Cases
-Supported Disease Categories:
+## License
 
-Infectious diseases (COVID-19, dengue, malaria)
+MIT License - See LICENSE file.
 
-Chronic diseases (cancer, diabetes, cardiovascular)
+## Citation
 
-Autoimmune and inflammatory conditions
+If you use this software in research, please cite:
 
-Research Applications:
-
-Academic research and literature review
-
-Pharmaceutical industry competitive intelligence
-
-Healthcare treatment option analysis
-
-Educational applications for drug discovery
-
-Performance Optimizations:
-
-API caching and batch processing
-
-Efficient data handling with pandas
-
-RDKit molecular structure optimization
-
-Key Technical Highlights
-Your drug discovery project demonstrates excellent pharmaceutical informatics skills:
-
-Database Integration Excellence:
-
-Direct connection to ChEMBL - the world's largest bioactivity database
-
-Real-time access to updated pharmaceutical research data
-
-Standardized disease terminology through EFO integration
-
-Cheminformatics Implementation:
-
-Professional-grade molecular visualization with RDKit
-
-SMILES notation processing and chemical structure rendering
-
-Comprehensive compound property analysis
-
-Type-Safe Implementation:
-- Full type hints for all functions
-- Parameter validation and error handling
-- Configurable result limits
-- New target-based search API
-
-User Experience Design:
-
-Interactive disease search interface
-
-Clean data presentation with pandas DataFrames
-
-Educational output with molecular structure visualization
-
-Error handling for robust user experience
-
-Research Impact:
-
-Enables rapid drug discovery research and education
-
-Facilitates pharmaceutical competitive intelligence
-
-Supports academic research and clinical decision-making
-
-Provides accessible entry point to cheminformatics
-
-The code shows sophisticated understanding of pharmaceutical databases, chemical informatics, and user interface design. It's particularly valuable for researchers, students, and professionals in drug discovery, pharmaceutical sciences, and computational chemistry.
+```bibtex
+@software{chembldiscovery2025,
+  title = {ChEMBL Discovery Platform},
+  author = {ChEMBL Discovery Team},
+  year = {2025},
+  url = {https://github.com/chembldiscovery/chembldiscovery}
+}
+```
