@@ -5,6 +5,16 @@ __author__ = "Drug Discovery Team"
 
 from chembldiscovery.services.drug_service import DrugService
 from chembldiscovery.services.target_service import TargetService
+from chembldiscovery.services.screening import VirtualScreeningService, UNTREATABLE_DISEASES
+from chembldiscovery.services.generator import MoleculeGenerator
 from chembldiscovery.core.client import ChEMBLClient
 
-__all__ = ["DrugService", "TargetService", "ChEMBLClient", "__version__"]
+__all__ = [
+    "DrugService", 
+    "TargetService", 
+    "VirtualScreeningService",
+    "MoleculeGenerator",
+    "UNTREATABLE_DISEASES",
+    "ChEMBLClient", 
+    "__version__"
+]

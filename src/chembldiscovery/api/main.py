@@ -305,3 +305,50 @@ async def compare_drugs(
     except Exception as e:
         logger.error(f"Compare error: {e}")
         raise HTTPException(status_code=500, detail="Comparison failed")
+
+
+@app.get("/api/v1/research/untreatable", tags=["Research"])
+async def list_untreatable_diseases():
+    """List untreatable diseases for research."""
+    from chembldiscovery.services import UNTREATABLE_DISEASES
+    return {"diseases": UNTREATABLE_DISEASES}
+
+
+@app.get("/api/v1/research/generate", tags=["Research"])
+async def generate_molecules(
+    disease: str = Query(..., description="Disease key (e.g., als, huntington)"),
+    leads: int = Query(20, ge=1, le=100, description="Number of leads"),
+    service: "VirtualScreeningService" = Depends(lambda: None)
+):
+    """Generate novel lead compounds for untreatable diseases."""
+    from chembldiscovery.services.screening import get_screening_service
+    
+    svc = get_screening_service()
+    try:
+        result = svc.screen_disease(disease, leads)
+        return result.to_dict()
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Generation error: {e}")
+        raise HTTPException(status_code=500, detail="Generation failed")
+
+
+@app.get("/api/v1/research/leads/{disease}", tags=["Research"])
+async def get_top_leads(
+    disease: str,
+    n: int = Query(5, ge=1, le=20),
+    service: "VirtualScreeningService" = Depends(lambda: None)
+):
+    """Get top lead compounds for a disease."""
+    from chembldiscovery.services.screening import get_screening_service
+    
+    svc = get_screening_service()
+    try:
+        leads = svc.get_top_leads(disease, n)
+        return {"leads": leads}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Leads error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get leads")
