@@ -287,7 +287,125 @@
             }
             .hero h1 { font-size: 36px; }
         }
+        
+        /* API Console Styles */
+        .api-console {
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+        }
+        
+        .api-console input {
+            background: #2d2d2d;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 6px;
+            width: 200px;
+            font-size: 14px;
+        }
+        
+        .api-console select {
+            background: #2d2d2d;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .api-console button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .api-console button:hover {
+            background: #059669;
+        }
+        
+        .api-result {
+            background: #0d0d0d;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+            color: #10b981;
+            font-size: 12px;
+            white-space: pre-wrap;
+            display: none;
+        }
+        
+        .api-result.show {
+            display: block;
+        }
+        
+        .loading {
+            color: #fbbf24;
+        }
+        
+        .error {
+            color: #ef4444;
+        }
+        
+        .api-endpoint {
+            color: #60a5fa;
+            font-weight: 600;
+        }
     </style>
+    <script>
+        // API Configuration - Change these URLs for your deployment
+        const API_BASE = 'http://localhost:8000'; // Change after deploying to Render
+        
+        async function callAPI(endpoint, params = {}) {
+            const url = new URL(API_BASE + endpoint);
+            Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+            
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.className = 'api-result show loading';
+            resultDiv.textContent = 'Calling ' + url.toString() + '...';
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                resultDiv.className = 'api-result show';
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultDiv.className = 'api-result show error';
+                resultDiv.textContent = 'Error: ' + error.message + '\n\nMake sure your backend API is running on ' + API_BASE;
+            }
+        }
+        
+        async function searchDiseases() {
+            const disease = document.getElementById('disease-input').value;
+            if (disease) {
+                callAPI('/api/v1/research/untreatable');
+            }
+        }
+        
+        async function generateLeads() {
+            const disease = document.getElementById('disease-select').value;
+            if (disease) {
+                callAPI('/api/v1/research/generate', { disease: disease, leads: 5 });
+            }
+        }
+        
+        async function searchDrugs() {
+            const query = document.getElementById('drug-search').value;
+            if (query) {
+                callAPI('/api/v1/drugs/search', { disease: query, max_results: 5 });
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="hero">
@@ -299,8 +417,8 @@
             <h1>Accelerate Drug Discovery<br><span>With AI-Powered Precision</span></h1>
             <p>Generate novel lead compounds for untreatable diseases in minutes, not years. Our computational platform combines ChEMBL's 2.4M compounds with generative AI to discover breakthrough therapies.</p>
             <div class="btn-group">
-                <a href="#try" class="btn btn-primary">🦾 Start Research</a>
-                <a href="#demo" class="btn btn-secondary">📊 View Demo</a>
+                <a href="#try" class="btn btn-primary" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">🦾 Try Now</a>
+                <a href="#demo" class="btn btn-secondary">📊 Live Demo</a>
             </div>
             <div class="stats">
                 <div class="stat">
@@ -411,6 +529,48 @@
                     <h4>Cystic Fibrosis</h4>
                     <p class="disease-targets">Targets: CFTR, ENaC</p>
                 </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="demo" style="background: #f3f4f6;">
+        <div class="container">
+            <div class="section-title">
+                <h2>🧪 Live API Demo</h2>
+                <p>Try the platform right from your browser</p>
+            </div>
+            
+            <div class="api-console">
+                <h3 style="color:white;margin-bottom:16px;">Drug Discovery API</h3>
+                
+                <div style="margin-bottom:16px;">
+                    <span class="api-endpoint">GET /api/v1/research/untreatable</span><br>
+                    <span style="color:#9ca3af;font-size:12px;">List all untreatable diseases</span><br>
+                    <button onclick="callAPI('/api/v1/research/untreatable')">Run</button>
+                </div>
+                
+                <div style="margin-bottom:16px;">
+                    <span class="api-endpoint">GET /api/v1/research/generate</span><br>
+                    <select id="disease-select">
+                        <option value="">Select disease...</option>
+                        <option value="als">ALS</option>
+                        <option value="huntington">Huntington's</option>
+                        <option value="alzheimers">Alzheimer's</option>
+                        <option value="parkinson">Parkinson's</option>
+                        <option value="duchenne">Duchenne MD</option>
+                        <option value="cf">Cystic Fibrosis</option>
+                        <option value="sickle_cell">Sickle Cell</option>
+                    </select>
+                    <button onclick="generateLeads()">Generate Leads</button>
+                </div>
+                
+                <div>
+                    <span class="api-endpoint">GET /api/v1/drugs/search</span><br>
+                    <input type="text" id="drug-search" placeholder="Disease (e.g., diabetes)">
+                    <button onclick="searchDrugs()">Search Drugs</button>
+                </div>
+                
+                <div id="api-result" class="api-result"></div>
             </div>
         </div>
     </section>

@@ -139,18 +139,7 @@ npm i -g vercel
 # Deploy from project folder
 cd /workspace/project/Drug-Discovery-using-ChEMBL-API
 vercel
-
-# Follow prompts:
-# - Set up and deploy? Yes
-# - Which scope? Your username
-# - Want to modify settings? No
 ```
-
-Or deploy via vercel.com:
-1. Push code to GitHub
-2. Go to vercel.com
-3. "Import Project" → Connect GitHub repo
-4. Deploy!
 
 ### Option 2: Netlify (Free)
 
@@ -175,9 +164,33 @@ git subtree push --prefix=. origin gh-pages
 
 ---
 
-## 🚀 Also Deploy Backend API
+### 🎯 Connect Frontend to Backend
 
-See "Deploy to Render" section above for the API backend.
+After deploying both services:
+
+1. **Update API URL in index.html:**
+```javascript
+// Line ~367 in index.html
+const API_BASE = 'https://chembldiscovery.onrender.com'; // Your Render URL
+```
+
+2. **Enable CORS on Backend:**
+The API already has CORS enabled for all origins.
+
+3. **Test:**
+- Frontend: `https://your-frontend.vercel.app`
+- Backend: `https://your-backend.onrender.com`
+- API Docs: `https://your-backend.onrender.com/docs`
+
+---
+
+### Current Architecture
+
+| Component | Where | URL |
+|----------|-------|-----|
+| Frontend | Vercel/Netlify | `*.vercel.app` |
+| Backend API | Render | `*.onrender.com` |
+| Database | ChEMBL (external) | `ftp.ebi.ac.uk` |
 ```
 
 ## 🚀 Deploy to Render (Free)
