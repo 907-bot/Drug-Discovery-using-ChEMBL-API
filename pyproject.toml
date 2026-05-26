@@ -59,13 +59,6 @@ Repository = "https://github.com/chembldiscovery/chembldiscovery"
 Issues = "https://github.com/chembldiscovery/chembldiscovery/issues"
 
 [project.scripts]
-chembldiscovery = "chembldiscovery.__main__:main"
-
-[tool.setuptools]
-packages = ["chembldiscovery", "chembldiscovery.api", "chembldiscovery.core", "chembldiscovery.models", "chembldiscovery.services"]
-
-[tool.setuptools.package-data]
-chembldiscovery = ["py.typed"]
 
 [tool.black]
 line-length = 100
