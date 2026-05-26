@@ -162,25 +162,32 @@ git subtree push --prefix=. origin gh-pages
 3. Build output: `.`
 4. Deploy!
 
----
-
 ### 🎯 Connect Frontend to Backend
 
 After deploying both services:
 
 1. **Update API URL in index.html:**
 ```javascript
-// Line ~367 in index.html
+// Line ~367 in index.html  
 const API_BASE = 'https://chembldiscovery.onrender.com'; // Your Render URL
 ```
 
 2. **Enable CORS on Backend:**
-The API already has CORS enabled for all origins.
+```python
+# Already configured in src/chembldiscovery/api/main.py
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+```
 
 3. **Test:**
-- Frontend: `https://your-frontend.vercel.app`
-- Backend: `https://your-backend.onrender.com`
-- API Docs: `https://your-backend.onrender.com/docs`
+- Frontend: `https://907-bot.github.io/Drug-Discovery-using-ChEMBL-API`
+- Backend: `https://your-app.onrender.com`
+- API Docs: `https://your-app.onrender.com/docs`
 
 ---
 
@@ -188,8 +195,8 @@ The API already has CORS enabled for all origins.
 
 | Component | Where | URL |
 |----------|-------|-----|
-| Frontend | Vercel/Netlify | `*.vercel.app` |
-| Backend API | Render | `*.onrender.com` |
+| Frontend | GitHub Pages | `https://907-bot.github.io/Drug-Discovery-using-ChEMBL-API` |
+| Backend API | Render | `https://your-app.onrender.com` |
 | Database | ChEMBL (external) | `ftp.ebi.ac.uk` |
 ```
 
