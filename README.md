@@ -128,6 +128,58 @@ If you use this software in research, please cite:
 }
 ```
 
+## 🌐 Deploy Frontend (Landing Page)
+
+### Option 1: Vercel (Recommended - Free)
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy from project folder
+cd /workspace/project/Drug-Discovery-using-ChEMBL-API
+vercel
+
+# Follow prompts:
+# - Set up and deploy? Yes
+# - Which scope? Your username
+# - Want to modify settings? No
+```
+
+Or deploy via vercel.com:
+1. Push code to GitHub
+2. Go to vercel.com
+3. "Import Project" → Connect GitHub repo
+4. Deploy!
+
+### Option 2: Netlify (Free)
+
+```bash
+# Drag & drop index.html to netlify.com/drop
+# Or connect GitHub repo
+```
+
+### Option 3: GitHub Pages
+
+```bash
+# Create gh-pages branch
+git subtree push --prefix=. origin gh-pages
+```
+
+### Option 4: Cloudflare Pages (Free)
+
+1. Go to dash.cloudflare.com/pages
+2. Connect GitHub repo
+3. Build output: `.`
+4. Deploy!
+
+---
+
+## 🚀 Also Deploy Backend API
+
+See "Deploy to Render" section above for the API backend.
+```
+
 ## 🚀 Deploy to Render (Free)
 
 ### Option 1: Push to GitHub & Connect to Render
