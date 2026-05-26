@@ -45,7 +45,11 @@ class ChEMBLClient:
         self._target = new_client.target
         self._activity = new_client.activity
         self._mechanism = new_client.mechanism
-        self._link = new_client.link
+        # Link endpoint may not exist in all versions
+        try:
+            self._link = new_client.link
+        except AttributeError:
+            self._link = None
         
         self._initialized = True
         logger.info("ChEMBL client initialized successfully")

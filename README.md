@@ -127,3 +127,58 @@ If you use this software in research, please cite:
   url = {https://github.com/chembldiscovery/chembldiscovery}
 }
 ```
+
+## 🚀 Deploy to Render (Free)
+
+### Option 1: Push to GitHub & Connect to Render
+
+1. **Push code to GitHub:**
+```bash
+git add -A
+git commit -m "Add Render deployment"
+git push origin main
+```
+
+2. **Deploy on Render:**
+   - Go to [dashboard.render.com](https://dashboard.render.com)
+   - Click "New +" → "Web Service"
+   - Connect your GitHub repository
+   - Configure:
+     - **Build Command**: `pip install -e .`
+     - **Start Command**: `uvicorn chembldiscovery.api.main:app --host 0.0.0.0 --port $PORT`
+   - Click "Create Web Service"
+
+### Option 2: Using Docker on Render
+
+```bash
+# Build and push Docker image
+docker build -t chembldiscovery .
+docker tag chembldiscovery:latest yourusername/chembldiscovery:latest
+docker push yourusername/chembldiscovery:latest
+```
+
+Then on Render, use the Docker image.
+
+### Environment Variables (Optional)
+
+Set these in Render dashboard:
+- `PORT` = `8000` (default)
+- `PYTHON_VERSION` = `3.12`
+
+### Test Your Deployment
+
+```bash
+curl https://your-app.onrender.com/health
+# Returns: {"status":"healthy","version":"1.0.0"}
+
+curl https://your-app.onrender.com/docs
+# Interactive API documentation
+```
+
+### Free Tier Limits
+
+- 750 hours/month (automatic sleep after 15 min inactivity)
+- Shared CPU
+- 512 MB RAM
+- Enough for demos and testing
+```
