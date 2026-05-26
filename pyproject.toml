@@ -59,8 +59,7 @@ Repository = "https://github.com/chembldiscovery/chembldiscovery"
 Issues = "https://github.com/chembldiscovery/chembldiscovery/issues"
 
 [project.scripts]
-chembldiscovery = "chembldiscovery.__:main__"
-chembl-api = "chembldiscovery.api.__:main__:main"
+chembldiscovery = "chembldiscovery.__main__:main"
 
 [tool.setuptools]
 packages = ["chembldiscovery", "chembldiscovery.api", "chembldiscovery.core", "chembldiscovery.models", "chembldiscovery.services"]
