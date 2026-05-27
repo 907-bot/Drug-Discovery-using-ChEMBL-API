@@ -1,11 +1,13 @@
 """FastAPI application for ChEMBL Discovery API."""
 
+import os
 import logging
 from typing import Optional, List
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Query, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
 
 from chembldiscovery import __version__
@@ -122,12 +124,26 @@ class HealthResponse(BaseModel):
 # Routes
 @app.get("/", tags=["Root"])
 async def root():
-    """Root endpoint."""
-    return {
-        "message": "ChEMBL Discovery API",
-        "version": __version__,
-        "docs": "/docs"
-    }
+    """Serve the frontend index.html."""
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # index.html is located at the root of the project.
+    # From src/chembldiscovery/api/main.py, the root is 4 levels up.
+    root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(current_dir))))
+    index_path = os.path.join(root_dir, "index.html")
+    
+    if not os.path.exists(index_path):
+        # Fallback to working directory /app or similar
+        index_path = "index.html"
+        
+    try:
+        with open(index_path, "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return {
+            "message": "ChEMBL Discovery API (index.html not found)",
+            "version": __version__,
+            "docs": "/docs"
+        }
 
 
 @app.get("/health", tags=["Health"], response_model=HealthResponse)

@@ -363,8 +363,8 @@
         }
     </style>
     <script>
-        // API Configuration - Change these URLs for your deployment
-        const API_BASE = 'https://drug-discovery-using-chembl-api.onrender.com';
+        // API Configuration - Uses current origin automatically (works for local and Render)
+        const API_BASE = window.location.origin;
         
         async function callAPI(endpoint, params = {}) {
             const url = new URL(API_BASE + endpoint);
